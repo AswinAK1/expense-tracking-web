@@ -5,6 +5,7 @@ export default function Dashboard() {
   const [summary, setSummary] = useState([]);
   const [month, setMonth] = useState(11);
   const [year, setYear] = useState(2025);
+  
 
   const loadSummary = async () => {
     const res = await api.get(`/summary?month=${month}&year=${year}`);

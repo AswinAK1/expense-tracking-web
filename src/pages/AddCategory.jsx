@@ -4,9 +4,10 @@ import api from "../../api/axios";
 export default function AddCategory() {
   const [name, setName] = useState("");
   const [limit, setLimit] = useState("");
+  const userId = localStorage.getItem("userId");
 
   const submit = async () => {
-    await api.post("/categories", { name, monthlyLimit: limit });
+    await api.post("/categories", { userId, name, monthlyLimit: limit });
     alert("Category added!");
     setName("");
     setLimit("");

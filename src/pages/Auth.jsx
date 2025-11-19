@@ -1,9 +1,13 @@
 import { useState } from "react";
 import api from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Auth() {
   const [step, setStep] = useState("signup");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
 
   const [form, setForm] = useState({
     fullName: "",
@@ -21,7 +25,7 @@ export default function Auth() {
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const res = await api.post("/signup", form);
+      const res = await api.post("/auth/signup", form);
       if (res.data.otpToken) {
         localStorage.setItem("otpToken", res.data.otpToken);
         setStep("otp");
@@ -39,10 +43,11 @@ export default function Auth() {
 
     setLoading(true);
     try {
-      const res = await api.post("/verify-otp", { otp, otpToken });
+      const res = await api.post("/auth/verify-otp", { otp, otpToken });
       if (res.data.success) {
         localStorage.removeItem("otpToken");
-        alert("Signup complete!");
+              navigate("/");
+
         setStep("login");
       } else alert(res.data.message);
     } catch {
@@ -53,22 +58,29 @@ export default function Auth() {
 
   // ---------------- LOGIN ----------------
   const handleLogin = async () => {
-    setLoading(true);
-    try {
-      const res = await api.post("/login", {
-        email: form.email,
-        password: form.password,
-      });
+  setLoading(true);
+  try {
+    const res = await api.post("/auth/login", {
+      email: form.email,
+      password: form.password,
+    });
+    localStorage.setItem("userId", res.data.user._id);
 
-      if (res.data.success) {
-        alert("Login successful!");
-        window.location.href = "/";
-      } else alert(res.data.message);
-    } catch {
-      alert("Login failed");
+    if (res.data.success) {
+      localStorage.setItem("token", res.data.token);
+
+      navigate("/");
+      return;
     }
-    setLoading(false);
-  };
+
+    alert(res.data.message);
+  } catch (err) {
+    console.log(err);
+    alert("Login failed");
+  }
+  setLoading(false);
+};
+
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
