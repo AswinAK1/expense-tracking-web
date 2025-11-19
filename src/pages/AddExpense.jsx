@@ -6,12 +6,15 @@ export default function AddExpense() {
   const [form, setForm] = useState({
     categoryId: "",
     amount: "",
-    description: ""
+    description: "",
   });
 
   const loadCategories = async () => {
-    const res = await api.get("/categories");
-    setCategories(res.data);
+    const token = localStorage.getItem("token");
+    if (token) {
+      const res = await api.get("/categories");
+      setCategories(res.data);
+    }
   };
 
   useEffect(() => {
@@ -19,8 +22,30 @@ export default function AddExpense() {
   }, []);
 
   const submit = async () => {
-    await api.post("/expenses", form);
-    alert("Expense added!");
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      return alert("Please log in to add an expense.");
+    }
+    if (!form.categoryId || !form.amount || !form.description) {
+      return alert("Please fill out all fields.");
+    }
+
+    try {
+      await api.post("/expenses", {
+        ...form,
+        amount: Number(form.amount),
+        userId: userId,
+      });
+      alert("Expense added!");
+      setForm({
+        categoryId: "",
+        amount: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error("Failed to add expense", error);
+      alert("Failed to add expense. Please try again.");
+    }
   };
 
   return (
@@ -29,9 +54,10 @@ export default function AddExpense() {
 
       <select
         className="w-full p-3 bg-gray-700 rounded mb-4"
+        value={form.categoryId}
         onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
       >
-        <option>Select Category</option>
+        <option value="">Select Category</option>
         {categories.map((c) => (
           <option key={c._id} value={c._id}>
             {c.name}
@@ -43,6 +69,7 @@ export default function AddExpense() {
         type="number"
         placeholder="Amount"
         className="w-full p-3 bg-gray-700 rounded mb-4"
+        value={form.amount}
         onChange={(e) =>
           setForm({ ...form, amount: e.target.value })
         }
@@ -52,6 +79,7 @@ export default function AddExpense() {
         type="text"
         placeholder="Description"
         className="w-full p-3 bg-gray-700 rounded mb-4"
+        value={form.description}
         onChange={(e) =>
           setForm({ ...form, description: e.target.value })
         }
