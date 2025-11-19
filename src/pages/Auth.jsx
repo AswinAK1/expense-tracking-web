@@ -25,7 +25,7 @@ export default function Auth() {
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const res = await api.post("/auth/signup", form);
+      const res = await api.post("/api/auth/signup", form);
       if (res.data.otpToken) {
         localStorage.setItem("otpToken", res.data.otpToken);
         setStep("otp");
@@ -43,7 +43,7 @@ export default function Auth() {
 
     setLoading(true);
     try {
-      const res = await api.post("/auth/verify-otp", { otp, otpToken });
+      const res = await api.post("/api/auth/verify-otp", { otp, otpToken });
       if (res.data.success) {
         localStorage.removeItem("otpToken");
               navigate("/");
@@ -60,7 +60,7 @@ export default function Auth() {
   const handleLogin = async () => {
   setLoading(true);
   try {
-    const res = await api.post("/auth/login", {
+    const res = await api.post("/api/auth/login", {
       email: form.email,
       password: form.password,
     });

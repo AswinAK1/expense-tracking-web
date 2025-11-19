@@ -10,7 +10,7 @@ export function Expenses() {
   const { theme } = useContext(ThemeContext);
 
   const loadExpenses = async () => {
-    const res = await api.get("/expenses/monthly-expense?month=11&year=2025");
+    const res = await api.get("/api/expenses/monthly-expense?month=11&year=2025");
     setExpenses(res.data);
   };
 
@@ -22,7 +22,7 @@ export function Expenses() {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
 
     try {
-      await api.delete(`/expenses/${id}`);
+      await api.delete(`/api/expenses/${id}`);
       loadExpenses();
     } catch (err) {
       console.error(err);

@@ -10,7 +10,7 @@ export function Categories() {
   const { theme } = useContext(ThemeContext);
 
   const load = async () => {
-    const res = await api.get("/categories");
+    const res = await api.get("/api/categories");
     setCategories(res.data);
   };
 
@@ -22,7 +22,7 @@ export function Categories() {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      await api.delete(`/categories/${id}`);
+      await api.delete(`/api/categories/${id}`);
       load();
     } catch (err) {
       console.error(err);

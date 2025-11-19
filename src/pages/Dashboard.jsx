@@ -19,7 +19,7 @@ export function Dashboard() {
   const { theme } = useContext(ThemeContext);
 
   const loadSummary = async () => {
-    const res = await api.get(`/summary?month=${month}&year=${year}`);
+    const res = await api.get(`/api/summary?month=${month}&year=${year}`);
     setSummary(res.data);
   };
 

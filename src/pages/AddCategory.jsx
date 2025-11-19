@@ -20,13 +20,13 @@ export function AddCategory({ onSuccess, editingData }) {
 
       if (editingData) {
         // UPDATE
-        await api.put(`/categories/${editingData._id}`, {
+        await api.put(`/api/categories/${editingData._id}`, {
           name,
           monthlyLimit: limit,
         });
       } else {
         // CREATE
-        await api.post("/categories", {
+        await api.post("/api/categories", {
           name,
           monthlyLimit: limit,
         });

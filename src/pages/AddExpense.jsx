@@ -8,7 +8,7 @@ export function AddExpense({ onSuccess, editingData }) {
   const { theme } = useContext(ThemeContext);
 
   const loadCategories = async () => {
-    const res = await api.get("/categories");
+    const res = await api.get("/api/categories");
     setCategories(res.data);
   };
 
@@ -34,13 +34,13 @@ export function AddExpense({ onSuccess, editingData }) {
     try {
       if (editingData) {
         // UPDATE
-        await api.put(`/expenses/${editingData._id}`, {
+        await api.put(`/api/expenses/${editingData._id}`, {
           ...form,
           amount: Number(form.amount),
         });
       } else {
         // CREATE
-        await api.post("/expenses", {
+        await api.post("/api/expenses", {
           ...form,
           amount: Number(form.amount),
         });
