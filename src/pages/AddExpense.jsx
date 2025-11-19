@@ -2,77 +2,78 @@ import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
 
-export function AddExpense({ onSuccess }) {
+export function AddExpense({ onSuccess, editingData }) {
   const [categories, setCategories] = useState([]);
-  const [form, setForm] = useState({ categoryId: "", amount: "", description: "" });
+  const [form, setForm] = useState({ categoryId: "", amount: "", description: ""  });
   const { theme } = useContext(ThemeContext);
 
   const loadCategories = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const res = await api.get("/categories");
-      setCategories(res.data);
-    }
+    const res = await api.get("/categories");
+    setCategories(res.data);
   };
 
   useEffect(() => {
     loadCategories();
   }, []);
 
-  const submit = async () => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) return alert("Please log in.");
+  // Prefill when editing
+  useEffect(() => {
+    if (editingData) {
+      setForm({
+        categoryId: editingData.categoryId?._id || "",
+        amount: editingData.amount,
+        description: editingData.description
+      });
+    }
+  }, [editingData]);
 
+  const submit = async () => {
     if (!form.categoryId || !form.amount || !form.description)
       return alert("Please fill all fields.");
 
     try {
-      await api.post("/expenses", {
-        ...form,
-        amount: Number(form.amount),
-        userId,
-      });
+      if (editingData) {
+        // UPDATE
+        await api.put(`/expenses/${editingData._id}`, {
+          ...form,
+          amount: Number(form.amount),
+        });
+      } else {
+        // CREATE
+        await api.post("/expenses", {
+          ...form,
+          amount: Number(form.amount),
+        });
+      }
 
       setForm({ categoryId: "", amount: "", description: "" });
-
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error(error);
-      alert("Failed to add expense.");
+      alert("Failed to save expense.");
     }
   };
 
   return (
-    <div
-      className={`animate-fadeIn ${
-        theme === "dark" ? "text-white bg-gray-900" : "text-black bg-white"
-      }`}
-    >
-      <h1
-        className={`text-2xl font-bold mb-4 ${
-          theme === "dark" ? "text-white" : "text-black"
-        }`}
-      >
-        Add Expense
+    <div className={`animate-fadeIn ${theme === "dark" ? "text-white bg-gray-900" : "text-black bg-white"}`}>
+      
+      <h1 className="text-2xl font-bold mb-4">
+        {editingData ? "Edit Expense" : "Add Expense"}
       </h1>
 
-      {/* Category Dropdown */}
+      {/* Category */}
       <select
-        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${
+        className={`w-full p-3 rounded-xl border mb-4 ${
           theme === "dark"
-            ? "bg-gray-800 border-gray-700 text-white focus:ring-blue-500"
-            : "bg-gray-200 border-gray-300 text-black focus:ring-blue-500"
+            ? "bg-gray-800 border-gray-700 text-white"
+            : "bg-gray-200 border-gray-300 text-black"
         }`}
         value={form.categoryId}
         onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
       >
         <option value="">Select Category</option>
         {categories.map((c) => (
-          <option
-            key={c._id}
-            value={c._id}
-            className={theme === "dark" ? "text-white bg-gray-800" : ""}
-          >
+          <option key={c._id} value={c._id}>
             {c.name}
           </option>
         ))}
@@ -82,10 +83,10 @@ export function AddExpense({ onSuccess }) {
       <input
         type="number"
         placeholder="Amount"
-        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${
+        className={`w-full p-3 rounded-xl border mb-4 ${
           theme === "dark"
-            ? "bg-gray-800 border-gray-700 text-white focus:ring-blue-500"
-            : "bg-gray-200 border-gray-300 text-black focus:ring-blue-500"
+            ? "bg-gray-800 border-gray-700 text-white"
+            : "bg-gray-200 border-gray-300 text-black"
         }`}
         value={form.amount}
         onChange={(e) => setForm({ ...form, amount: e.target.value })}
@@ -95,25 +96,25 @@ export function AddExpense({ onSuccess }) {
       <input
         type="text"
         placeholder="Description"
-        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${
+        className={`w-full p-3 rounded-xl border mb-4 ${
           theme === "dark"
-            ? "bg-gray-800 border-gray-700 text-white focus:ring-blue-500"
-            : "bg-gray-200 border-gray-300 text-black focus:ring-blue-500"
+            ? "bg-gray-800 border-gray-700 text-white"
+            : "bg-gray-200 border-gray-300 text-black"
         }`}
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />
 
-      {/* Add Button */}
+      {/* Save Button */}
       <button
         onClick={submit}
-        className={`w-full py-3 rounded-xl font-semibold hover:opacity-90 transition ${
+        className={`w-full py-3 rounded-xl font-semibold transition ${
           theme === "dark"
-            ? "bg-blue-700 text-white"
-            : "bg-gradient-to-r from-blue-600 to-blue-400 text-white"
+            ? "bg-blue-700 text-white hover:bg-blue-600"
+            : "bg-blue-600 text-white hover:bg-blue-500"
         }`}
       >
-        Add Expense
+        {editingData ? "Update Expense" : "Add Expense"}
       </button>
     </div>
   );

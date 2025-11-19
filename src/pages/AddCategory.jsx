@@ -1,26 +1,52 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
 
-export function AddCategory({ onSuccess }) {
+export function AddCategory({ onSuccess, editingData }) {
   const [name, setName] = useState("");
   const [limit, setLimit] = useState("");
-  const userId = localStorage.getItem("userId");
   const { theme } = useContext(ThemeContext);
 
+  useEffect(() => {
+    if (editingData) {
+      setName(editingData.name);
+      setLimit(editingData.monthlyLimit);
+    }
+  }, [editingData]);
+
   const submit = async () => {
-    await api.post("/categories", { userId, name, monthlyLimit: limit });
+    try {
+      if (!name || !limit) return alert("All fields required.");
 
-    setName("");
-    setLimit("");
+      if (editingData) {
+        // UPDATE
+        await api.put(`/categories/${editingData._id}`, {
+          name,
+          monthlyLimit: limit,
+        });
+      } else {
+        // CREATE
+        await api.post("/categories", {
+          name,
+          monthlyLimit: limit,
+        });
+      }
 
-    if (onSuccess) onSuccess();
+      setName("");
+      setLimit("");
+
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save category.");
+    }
   };
 
   return (
     <div className={`animate-fadeIn ${theme === "dark" ? "text-white" : "text-black"}`}>
+
       <h1 className="text-2xl font-bold mb-4">
-        Add Category
+        {editingData ? "Edit Category" : "Add Category"}
       </h1>
 
       <div className="space-y-4">
@@ -57,7 +83,7 @@ export function AddCategory({ onSuccess }) {
               : "bg-blue-600 hover:bg-blue-500 text-white"
           }`}
         >
-          Add
+          {editingData ? "Update" : "Add"}
         </button>
 
       </div>
