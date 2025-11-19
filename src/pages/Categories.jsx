@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
-
+import { AddCategory } from "./AddCategory";
 
 export function Categories() {
   const [categories, setCategories] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
   const { theme } = useContext(ThemeContext);
-  
 
   const load = async () => {
     const res = await api.get("/categories");
@@ -19,11 +19,23 @@ export function Categories() {
 
   return (
     <div className={`p-10 animate-fadeIn ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-      <h1 className={`text-3xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Your Categories</h1>
+      
+      <div className="flex justify-between items-center mb-6">
+        <h1 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+          Your Categories
+        </h1>
+
+        <button
+          onClick={() => setOpenModal(true)}
+          className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-xl transition"
+        >
+          + Add Category
+        </button>
+      </div>
 
       <table className={`w-full rounded-xl overflow-hidden shadow-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}`}>
         <thead className={`${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'}`}>
-          <tr className={`${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+          <tr>
             <th className="p-3">Name</th>
             <th className="p-3">Limit</th>
           </tr>
@@ -31,13 +43,47 @@ export function Categories() {
 
         <tbody>
           {categories.map((c) => (
-            <tr key={c._id} className={`text-center border-b ${theme === 'dark' ? 'border-gray-700 hover:bg-gray-700/40' : 'border-gray-300 hover:bg-gray-200/40'} transition`}>
+            <tr
+              key={c._id}
+              className={`text-center border-b ${
+                theme === 'dark'
+                  ? 'border-gray-700 hover:bg-gray-700/40'
+                  : 'border-gray-300 hover:bg-gray-200/40'
+              } transition`}
+            >
               <td className="p-3">{c.name}</td>
               <td className="p-3">₹{c.monthlyLimit}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Modal */}
+      {openModal && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+
+          {/* THE FIX → theme-controlled modal box */}
+          <div
+            className={`p-8 rounded-xl shadow-xl w-[90%] max-w-md relative ${
+              theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+            }`}
+          >
+            <button
+              onClick={() => setOpenModal(false)}
+              className="absolute top-3 right-3 text-xl text-gray-500 hover:text-gray-800 dark:hover:text-white"
+            >
+              ✖
+            </button>
+
+            <AddCategory
+              onSuccess={() => {
+                load();
+                setOpenModal(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

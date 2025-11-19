@@ -57,9 +57,7 @@ export function Navbar({ open, setOpen }) {
         <div className="flex flex-col gap-4 text-lg">
           <Link className="hover:text-blue-400 transition" to="/">Dashboard</Link>
           <Link className="hover:text-blue-400 transition" to="/categories">Categories</Link>
-          <Link className="hover:text-blue-400 transition" to="/add-category">Add Category</Link>
           <Link className="hover:text-blue-400 transition" to="/expenses">Expenses</Link>
-          <Link className="hover:text-blue-400 transition" to="/add-expense">Add Expense</Link>
 
           <button
             onClick={logout}
