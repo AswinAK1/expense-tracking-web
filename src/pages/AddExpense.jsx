@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
+import { ThemeContext } from "../context/ThemeContext";
 
 export function AddExpense() {
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ categoryId: "", amount: "", description: "" });
+  const { theme } = useContext(ThemeContext);
 
   const loadCategories = async () => {
     const token = localStorage.getItem("token");
@@ -34,11 +36,11 @@ export function AddExpense() {
   };
 
   return (
-    <div className="p-10 text-white max-w-lg mx-auto animate-fadeIn">
+    <div className={`p-10 max-w-lg mx-auto animate-fadeIn ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
       <h1 className="text-3xl font-bold mb-6">Add Expense</h1>
 
       <select
-        className="w-full p-3 bg-gray-800 rounded-xl border border-gray-700 mb-4 focus:ring-2 focus:ring-blue-500"
+        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 focus:ring-blue-500' : 'bg-gray-200 border-gray-300 focus:ring-blue-500'}`}
         value={form.categoryId}
         onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
       >
@@ -51,7 +53,7 @@ export function AddExpense() {
       <input
         type="number"
         placeholder="Amount"
-        className="w-full p-3 bg-gray-800 rounded-xl border border-gray-700 mb-4 focus:ring-2 focus:ring-blue-500"
+        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 focus:ring-blue-500' : 'bg-gray-200 border-gray-300 focus:ring-blue-500'}`}
         value={form.amount}
         onChange={(e) => setForm({ ...form, amount: e.target.value })}
       />
@@ -59,7 +61,7 @@ export function AddExpense() {
       <input
         type="text"
         placeholder="Description"
-        className="w-full p-3 bg-gray-800 rounded-xl border border-gray-700 mb-4 focus:ring-2 focus:ring-blue-500"
+        className={`w-full p-3 rounded-xl border mb-4 focus:ring-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 focus:ring-blue-500' : 'bg-gray-200 border-gray-300 focus:ring-blue-500'}`}
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />

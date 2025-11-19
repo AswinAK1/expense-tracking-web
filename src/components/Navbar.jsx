@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
+import ThemeToggleButton from "./ThemeToggleButton";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 export function Navbar({ open, setOpen }) {
   const token = localStorage.getItem("token");
+  const { theme } = useContext(ThemeContext);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -10,11 +14,11 @@ export function Navbar({ open, setOpen }) {
 
   return (
     <>
-      <nav className="backdrop-blur-xl bg-gray-900/80 text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-40 shadow-lg">
+      <nav className={`backdrop-blur-xl p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-40 shadow-lg ${theme === 'dark' ? 'bg-gray-900/80 text-white' : 'bg-gray-100 text-black'}`}>
         {token && (
           <button
             onClick={() => setOpen(!open)}
-            className="text-white hover:text-blue-400 transition"
+            className={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:text-blue-400 transition`}
           >
             <svg
               className="w-8 h-8"
@@ -29,10 +33,11 @@ export function Navbar({ open, setOpen }) {
         )}
 
         <h1 className="text-2xl font-bold tracking-wide">Expense Manager</h1>
+        <ThemeToggleButton />
       </nav>
 
       <div
-        className={`fixed top-0 left-0 h-full w-72 bg-gray-900/95 text-white p-6 z-50 shadow-xl border-r border-gray-700 transform transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed top-0 left-0 h-full w-72 p-6 z-50 shadow-xl border-r transform transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"} ${theme === 'dark' ? 'bg-gray-900/95 text-white border-gray-700' : 'bg-white text-black border-gray-200'}`}
       >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-semibold">Menu</h2>
