@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
@@ -6,10 +6,11 @@ import { ThemeContext } from "../context/ThemeContext";
 export function Navbar({ open, setOpen }) {
   const token = localStorage.getItem("token");
   const { theme } = useContext(ThemeContext);
+  const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/auth";
+    navigate("/auth");
   };
 
   return (
