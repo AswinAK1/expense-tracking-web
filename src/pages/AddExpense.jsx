@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
+import { toast } from "react-toastify";
 
 export function AddExpense({ onSuccess, editingData }) {
   const [categories, setCategories] = useState([]);
@@ -29,7 +30,7 @@ export function AddExpense({ onSuccess, editingData }) {
 
   const submit = async () => {
     if (!form.categoryId || !form.amount || !form.description)
-      return alert("Please fill all fields.");
+      return toast.error("Please fill all fields.");
 
     try {
       if (editingData) {
@@ -50,7 +51,7 @@ export function AddExpense({ onSuccess, editingData }) {
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error(error);
-      alert("Failed to save expense.");
+      toast.error("Failed to save expense.");
     }
   };
 
@@ -102,7 +103,7 @@ export function AddExpense({ onSuccess, editingData }) {
             : "bg-gray-200 border-gray-300 text-black"
         }`}
         value={form.description}
-        onChange={(e) => setForm({ ...form, description: e.target.value })}
+        onChange={(e) => setForm({ ...form, description: e.garet.value })}
       />
 
       {/* Save Button */}

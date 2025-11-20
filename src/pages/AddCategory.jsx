@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
+import { toast } from "react-toastify";
 
 export function AddCategory({ onSuccess, editingData }) {
   const [name, setName] = useState("");
@@ -16,7 +17,7 @@ export function AddCategory({ onSuccess, editingData }) {
 
   const submit = async () => {
     try {
-      if (!name || !limit) return alert("All fields required.");
+      if (!name || !limit) return toast.error("All fields required.");
 
       if (editingData) {
         // UPDATE
@@ -38,7 +39,7 @@ export function AddCategory({ onSuccess, editingData }) {
       if (onSuccess) onSuccess();
     } catch (err) {
       console.error(err);
-      alert("Failed to save category.");
+      toast.error("Failed to save category.");
     }
   };
 

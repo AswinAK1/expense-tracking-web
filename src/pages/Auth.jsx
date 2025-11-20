@@ -3,6 +3,7 @@ import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
 import ThemeToggleButton from "../components/ThemeToggleButton";
+import { toast } from "react-toastify";
 
 export default function Auth() {
   const [step, setStep] = useState("signup");
@@ -30,9 +31,9 @@ export default function Auth() {
       if (res.data.otpToken) {
         localStorage.setItem("otpToken", res.data.otpToken);
         setStep("otp");
-      } else alert(res.data.message);
+      } else toast.error(res.data.message);
     } catch (err) {
-      alert("Signup failed");
+      toast.error("Signup failed");
     }
     setLoading(false);
   };
@@ -40,18 +41,19 @@ export default function Auth() {
   // ---------------- VERIFY OTP ----------------
   const handleVerifyOtp = async () => {
     const otpToken = localStorage.getItem("otpToken");
-    if (!otpToken) return alert("Missing OTP Token");
+    if (!otpToken) return toast.error("Missing OTP Token");
 
     setLoading(true);
     try {
       const res = await api.post("/api/auth/verify-otp", { otp, otpToken });
       if (res.data.success) {
         localStorage.removeItem("otpToken");
+        toast.success("OTP verified successfully");
         window.location.href = "/";
         setStep("login");
-      } else alert(res.data.message);
+      } else toast.error(res.data.message);
     } catch {
-      alert("Invalid OTP");
+      toast.error("Invalid OTP");
     }
     setLoading(false);
   };
@@ -73,10 +75,10 @@ export default function Auth() {
         return;
       }
 
-      alert(res.data.message);
+      toast.error(res.data.message);
     } catch (err) {
       console.log(err);
-      alert("Login failed");
+      toast.error("Login failed");
     }
     setLoading(false);
   };

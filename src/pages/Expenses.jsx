@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
 import { AddExpense } from "./AddExpense";
+import { toast } from "react-toastify";
 
 export function Expenses() {
   const [expenses, setExpenses] = useState([]);
@@ -19,14 +20,23 @@ export function Expenses() {
   }, []);
 
   const deleteExpense = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this expense?")) return;
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this expense?</p>
+        <button onClick={() => confirmDelete(id)}>Yes</button>
+        <button onClick={() => toast.dismiss()}>No</button>
+      </div>
+    );
+  };
 
+  const confirmDelete = async (id) => {
     try {
       await api.delete(`/api/expenses/${id}`);
       loadExpenses();
+      toast.success("Expense deleted successfully");
     } catch (err) {
       console.error(err);
-      alert("Delete failed");
+      toast.error("Delete failed");
     }
   };
 

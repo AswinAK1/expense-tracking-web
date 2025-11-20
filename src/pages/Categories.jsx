@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import api from "../../api/axios";
 import { ThemeContext } from "../context/ThemeContext";
 import { AddCategory } from "./AddCategory";
+import { toast } from "react-toastify";
 
 export function Categories() {
   const [categories, setCategories] = useState([]);
@@ -19,16 +20,25 @@ export function Categories() {
   }, []);
 
   const deleteCategory = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category?")) return;
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this category?</p>
+        <button onClick={() => confirmDelete(id)}>Yes</button>
+        <button onClick={() => toast.dismiss()}>No</button>
+      </div>
+    );
+  };
 
+  const confirmDelete = async (id) => {
     try {
       await api.delete(`/api/categories/${id}`);
+      toast.success("Category deleted successfully");
       load();
     } catch (err) {
       console.error(err);
-      alert("Delete failed");
+      toast.error("Delete failed");
     }
-  };
+  }
 
   return (
     <div className={`p-10 animate-fadeIn ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
