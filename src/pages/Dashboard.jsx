@@ -41,48 +41,6 @@ export function Dashboard() {
     >
       <h1 className="text-3xl font-bold mb-6 mt-7">Monthly Summary</h1>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition">
-        {summary.map((item, i) => (
-          <div
-            key={i}
-            className={`p-6 rounded-2xl shadow-lg border transition
-              ${
-                theme === "dark"
-                  ? "bg-gray-900 border-gray-800 hover:border-blue-500 hover:shadow-blue-500/20"
-                  : "bg-white border-gray-300 hover:border-blue-400 hover:shadow-blue-300/30"
-              }
-            `}
-          >
-            <h2 className="text-xl font-semibold">{item.category}</h2>
-
-            <p
-              className={`mt-3 ${
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-              }`}
-            >
-              Limit: ₹{item.limit}
-            </p>
-            <p className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-              Spent: ₹{item.spent}
-            </p>
-            <p className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-              Remaining: ₹{item.remaining}
-            </p>
-
-            <span
-              className={`mt-4 inline-block px-4 py-1 rounded-md text-sm ${
-                item.status === "over"
-                  ? "bg-red-600/80 text-white"
-                  : "bg-green-600/80 text-white"
-              }`}
-            >
-              {item.status.toUpperCase()}
-            </span>
-          </div>
-        ))}
-      </div>
-
       {/* Chart Section */}
       <div
         className={`mt-10 p-6 rounded-2xl shadow-lg border transition 
@@ -135,6 +93,48 @@ export function Dashboard() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition">
+        {summary.map((item, i) => (
+          <div
+            key={i}
+            className={`p-6 rounded-2xl shadow-lg border transition
+              ${
+                theme === "dark"
+                  ? "bg-gray-900 border-gray-800 hover:border-blue-500 hover:shadow-blue-500/20"
+                  : "bg-white border-gray-300 hover:border-blue-400 hover:shadow-blue-300/30"
+              }
+            `}
+          >
+            <h2 className="text-xl font-semibold">{item.category}</h2>
+
+            <p
+              className={`mt-3 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              Limit: ₹{item.limit}
+            </p>
+            <p className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+              Spent: ₹{item.spent}
+            </p>
+            <p className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+              Remaining: ₹{item.remaining}
+            </p>
+
+            <span
+              className={`mt-4 inline-block px-4 py-1 rounded-md text-sm ${
+                item.status === "over"
+                  ? "bg-red-600/80 text-white"
+                  : "bg-green-600/80 text-white"
+              }`}
+            >
+              {item.status.toUpperCase()}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
