@@ -46,8 +46,7 @@ export default function Auth() {
       const res = await api.post("/api/auth/verify-otp", { otp, otpToken });
       if (res.data.success) {
         localStorage.removeItem("otpToken");
-              navigate("/");
-
+        window.location.href = "/";
         setStep("login");
       } else alert(res.data.message);
     } catch {
@@ -58,28 +57,28 @@ export default function Auth() {
 
   // ---------------- LOGIN ----------------
   const handleLogin = async () => {
-  setLoading(true);
-  try {
-    const res = await api.post("/api/auth/login", {
-      email: form.email,
-      password: form.password,
-    });
-    localStorage.setItem("userId", res.data.user._id);
+    setLoading(true);
+    try {
+      const res = await api.post("/api/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
+      localStorage.setItem("userId", res.data.user._id);
 
-    if (res.data.success) {
-      localStorage.setItem("token", res.data.token);
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
 
-      navigate("/");
-      return;
+        window.location.href = "/";
+        return;
+      }
+
+      alert(res.data.message);
+    } catch (err) {
+      console.log(err);
+      alert("Login failed");
     }
-
-    alert(res.data.message);
-  } catch (err) {
-    console.log(err);
-    alert("Login failed");
-  }
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
 
   return (

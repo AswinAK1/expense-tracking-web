@@ -96,7 +96,7 @@ export function Dashboard() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition mt-14">
         {summary.map((item, i) => (
           <div
             key={i}
