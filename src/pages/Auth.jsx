@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
-
+import { ThemeContext } from "../context/ThemeContext";
+import ThemeToggleButton from "../components/ThemeToggleButton";
 
 export default function Auth() {
   const [step, setStep] = useState("signup");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { theme } = useContext(ThemeContext);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -82,8 +83,11 @@ export default function Auth() {
 
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="w-[90%] lg:w-[70%] bg-black/40 rounded-xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2">
+    <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+       <div className="absolute top-4 right-4">
+        <ThemeToggleButton />
+      </div>
+      <div className={`w-[90%] lg:w-[70%] ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2`}>
 
         <div className="hidden lg:flex flex-col items-center justify-center bg-yellow-50 p-10">
           <h2 className="text-3xl font-semibold mb-6 text-gray-900">
@@ -98,7 +102,7 @@ export default function Auth() {
         </div>
 
         {/* ---------------- RIGHT SECTION (Form) ---------------- */}
-        <div className="p-10 text-white flex flex-col justify-center">
+        <div className={`p-10 ${theme === 'dark' ? 'text-white' : 'text-black'} flex flex-col justify-center`}>
 
           <h2 className="text-4xl font-semibold mb-10 text-center">
             Monthly <span className="text-green-400">Budget</span>
@@ -111,21 +115,21 @@ export default function Auth() {
                 type="text"
                 name="fullName"
                 placeholder="Insert Your Name"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 onChange={handleChange}
               />
               <input
                 type="email"
                 name="email"
                 placeholder="Insert Your Email"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 onChange={handleChange}
               />
               <input
                 type="password"
                 name="password"
                 placeholder="Insert Password"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 onChange={handleChange}
               />
 
@@ -154,7 +158,7 @@ export default function Auth() {
               <input
                 type="text"
                 placeholder="Enter OTP"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
               />
@@ -175,7 +179,7 @@ export default function Auth() {
                 type="email"
                 name="email"
                 placeholder="Insert Your Email"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 onChange={handleChange}
               />
 
@@ -183,7 +187,7 @@ export default function Auth() {
                 type="password"
                 name="password"
                 placeholder="Insert Password"
-                className="w-full p-3 bg-transparent border-b border-gray-600 mb-6 focus:outline-none"
+                className={`w-full p-3 bg-transparent border-b ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'} mb-6 focus:outline-none`}
                 onChange={handleChange}
               />
 
