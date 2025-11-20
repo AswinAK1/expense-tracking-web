@@ -2,6 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://expense-tracking-api-eight.vercel.app",
+  // baseURL:"http://localhost:3000",
 });
 
 api.interceptors.request.use((config) => {
